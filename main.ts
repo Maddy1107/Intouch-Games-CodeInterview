@@ -12,7 +12,7 @@ class ITGTechTask
         this.canvas = document.getElementById('canvas') as HTMLCanvasElement;
         this.context = this.canvas.getContext("2d");
 
-        this.backgroundImage.src = "src/graphics/background_safe_minigame.png";
+        this.backgroundImage.src = "graphics/background_safe_minigame.png";
         this.backgroundImage.onload = this.update.bind( this );
     }
 
@@ -27,7 +27,6 @@ class ITGTechTask
 
         // Draw the background image
         this.context.drawImage( this.backgroundImage, 0, 0 );
-
 
         window.requestAnimationFrame( this.update.bind( this ) )
       }

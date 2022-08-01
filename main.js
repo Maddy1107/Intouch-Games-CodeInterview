@@ -4,7 +4,7 @@ var ITGTechTask = /** @class */ (function () {
         this.backgroundImage = new Image();
         this.canvas = document.getElementById('canvas');
         this.context = this.canvas.getContext("2d");
-        this.backgroundImage.src = "src/graphics/background_safe_minigame.png";
+        this.backgroundImage.src = "graphics/background_safe_minigame.png";
         this.backgroundImage.onload = this.update.bind(this);
     }
     // Main Game Loop
