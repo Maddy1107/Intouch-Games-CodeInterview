@@ -1,0 +1,28 @@
+{
+  "name": "intouch-games-codeinterview",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "module",
+    "url": "git+https://github.com/Maddy1107/Intouch-Games-CodeInterview.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Maddy1107/Intouch-Games-CodeInterview/issues"
+  },
+  "homepage": "https://github.com/Maddy1107/Intouch-Games-CodeInterview#readme",
+  "devDependencies": {
+    "@types/node": "^18.6.3",
+    "ts-loader": "^9.3.1",
+    "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "@types/http-server": "^0.12.1"
+  }
+}
