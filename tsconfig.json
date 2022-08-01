@@ -6,7 +6,9 @@
             "es5",
             "dom"
         ],
+        "watch":true,
         "noUnusedLocals": true,
-        "module": "commonjs"
-    }
+        "module": "commonjs",
+        "outDir": "src/dest"
+    },
 }
