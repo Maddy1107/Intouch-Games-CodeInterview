@@ -1,5 +1,8 @@
+import { Vector } from './../helpers/types';
 import { safe } from '../objects/safe.js';
 import { IGameObject } from './../interfaces/IGameObject';
+//import { Dimbo } from './../../fonts/DimboItalic.ttf'
+//import { Titan } from './../../fonts/TitanOne-Regular.ttf';
 export class ViewCanvas{
 
     canvas: HTMLCanvasElement;
@@ -34,7 +37,20 @@ export class ViewCanvas{
     draw_safes(safes : safe[]):void{
         safes.forEach(element => {
             this.drawSprite(element)
+
+            const pos : Vector = {
+                x:element.position.x + (element.size.x / 2) - 8, 
+                y:element.position.y + (element.size.y / 2) + 20
+            }
+            this.draw_text(String(element.safe_number), pos, 'white', "bold 50px comic sans ms")
         });
+    }
+
+    //Draw Text
+    draw_text(text : string, pos : Vector, color: string,fonttype:string, ):void{
+        this.context.font = fonttype;
+        this.context.fillStyle = color
+        this.context.fillText(text,pos.x, pos.y)
     }
 
 }

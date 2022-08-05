@@ -18,8 +18,8 @@ export function create_safes(): safe[]{
 
     let map = currsafeMultiplier.reduce((acc, e) => acc.set(e, (acc.get(e) || 0)), new Map());
 
-    for(let i = 0; i < rows; i++){
-        for (let j = 0; j < cols; j++) {
+    for(let i = 0; i < cols; i++){
+        for (let j = 0; j < rows; j++) {
 
             const mul = get_random_multiplier(map);
 
@@ -27,19 +27,17 @@ export function create_safes(): safe[]{
 
             safeArray.push(new safe(
                 {
-                    x: i * 170 + safe_XPadding,
-                    y: j * 150 + safe_YPadding
+                    x: j * 170 + safe_XPadding,
+                    y: i * 150 + safe_YPadding
                 },
                 "../graphics/safe_minigame.png",
                 mul,
                 ++count,
                 {
-                    x:safe_width,
+                    x: safe_width,
                     y: safe_height
                 }
                 ))
-            console.log("MUL " + mul)
-            console.log("NUM " + count)
         }
     }
     return safeArray;
