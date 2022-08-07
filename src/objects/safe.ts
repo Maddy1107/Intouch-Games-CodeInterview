@@ -1,7 +1,7 @@
 import { IGameObject } from '../interfaces/IGameObject';
 import { Vector } from "../helpers/types.js";
 
-export class safe implements IGameObject{
+export class Safe implements IGameObject{
 
     image : HTMLImageElement = new Image();
     position: Vector;

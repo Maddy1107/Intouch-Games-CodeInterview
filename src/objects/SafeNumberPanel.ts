@@ -1,7 +1,7 @@
 import { IGameObject } from '../interfaces/IGameObject';
 import { Vector } from "../helpers/types.js";
 
-export class safeNumberPanel implements IGameObject{
+export class SafeNumberPanel implements IGameObject{
 
     image : HTMLImageElement = new Image();
     position: Vector;
@@ -29,5 +29,10 @@ export class safeNumberPanel implements IGameObject{
     changeText(newtext : string)
     {
         this.text = newtext
+    }
+
+    change_dimensions(size : Vector, pos: Vector){
+        this.size = size;
+        this.position = pos
     }
 }

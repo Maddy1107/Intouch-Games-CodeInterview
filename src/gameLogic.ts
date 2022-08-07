@@ -1,8 +1,8 @@
-import { safeNumberPanel } from './objects/safe_number_panel';
-import { ViewCanvas } from './Canvas/view';
-import { safe } from "./objects/safe";
+import { TopTextPanel } from './objects/ToptextPanel';
+import { SafeNumberPanel } from './objects/SafeNumberPanel';
+import { Safe } from "./objects/Safe";
 
-export class gameLogic{
+export class GameLogic{
 
     initial_amount : number = 2000//initial bet money
     final_amount : number;//final_amount
@@ -10,24 +10,24 @@ export class gameLogic{
     numbers_already_appeared = []//numbers in the dial already appeared
     multipliers_already_appeared = new Map()//Keep track of similar multiplier
 
-    current_safe = 0;//which safe has to be opened
+    current_Safe = 0;//which Safe has to be opened
     current_multiplier = 0;//final multiplie selected
 
     number_of_tries : number;//how many tries
-    total_safes = []//store all safes
-    safe_panel : safeNumberPanel
+    total_Safes = []//store all Safes
+    Safe_panel : SafeNumberPanel
     got_same_multiplier : boolean;
 
-    canvas :ViewCanvas;
+    textPanel: TopTextPanel
 
-    constructor(safes : safe[], view : ViewCanvas, safepanel:safeNumberPanel){
+    constructor(Safes : Safe[], Safepanel:SafeNumberPanel, textPanel: TopTextPanel){
         document.addEventListener('keydown', this.processInput)
         this.number_of_tries = 4;
-        this.total_safes = safes;
+        this.total_Safes = Safes;
         this.final_amount = 0;
         this.got_same_multiplier = false;
-        this.canvas = view;
-        this.safe_panel = safepanel
+        this.Safe_panel = Safepanel
+        this.textPanel = textPanel
     }
 
     //Take a keyboard event and process it
@@ -58,12 +58,13 @@ export class gameLogic{
                 break;
             }
         }
-        this.current_safe = rand_num;
+        this.current_Safe = rand_num;
 
-        if(this.current_safe > 0){
-            this.open_safe(false);
-            this.canvas.draw_text("SAFE " + String(this.current_safe), {x:400, y : 85}, 'black', "bold 50px comic sans ms")
-            this.current_safe = 0
+        if(this.current_Safe > 0){
+            this.open_Safe(false);
+            this.textPanel.change_text('Safe ' + this.current_Safe)
+            this.textPanel.change_dimensions({x:280, y : 100}, '100px')
+            this.current_Safe = 0
         }
     }
 
@@ -72,23 +73,21 @@ export class gameLogic{
         return Math.floor(Math.random() * 9) + 1;
     }
 
-    //Open the safe
-    open_safe(gameComplete : boolean) {
-        this.total_safes.forEach(element => {
-            if(element.safe_number == this.current_safe){
-                element.changeImage('./graphics/safe_open_minigame.png')
-                this.safe_panel.text += String(this.current_safe) + ' '
-                this.safe_panel.changeText(this.safe_panel.text)
-                console.log(this.safe_panel.text[0])
+    //Open the Safe
+    open_Safe(gameComplete : boolean) {
+        this.total_Safes.forEach(element => {
+            if(element.Safe_number == this.current_Safe){
+                element.changeImage('./graphics/Safe_open_minigame.png')
+                this.draw_panel_text()
+                element.open = true;
                 this.got_same_multiplier =  this.check_if_same_multiplier(element.multiplier);
-                console.log(this.current_safe, this.multipliers_already_appeared, this.got_same_multiplier)
             }
         });
-        // for(let i = 0; i < this.total_safes.length; i++) {
-        //     if(this.total_safes[i].safe_number == this.current_safe){
-        //         this.total_safes[i].changeImage('./graphics/safe_open_minigame.png')
-        //         this.got_same_multiplier =  this.check_if_same_multiplier(this.total_safes[i].mu);
-        //         console.log(this.current_safe, this.multipliers_already_appeared, this.got_same_multiplier)
+        // for(let i = 0; i < this.total_Safes.length; i++) {
+        //     if(this.total_Safes[i].Safe_number == this.current_Safe){
+        //         this.total_Safes[i].changeImage('./graphics/Safe_open_minigame.png')
+        //         this.got_same_multiplier =  this.check_if_same_multiplier(this.total_Safes[i].mu);
+        //         console.log(this.current_Safe, this.multipliers_already_appeared, this.got_same_multiplier)
         //         break;
         //     }
         // }
@@ -105,13 +104,19 @@ export class gameLogic{
         else{
             this.multipliers_already_appeared.set(multiplier, 1)
         }
-        console.log(this.current_safe, this.multipliers_already_appeared)
+        console.log(this.current_Safe, this.multipliers_already_appeared)
         if( this.multipliers_already_appeared.get(multiplier) >= 2)
         {
             this.current_multiplier = multiplier;
             return true;
         }
         return false
+    }
+
+    draw_panel_text():void
+    {
+        this.Safe_panel.text += String(this.current_Safe) + ' '
+        this.Safe_panel.changeText(this.Safe_panel.text)
     }
 
     //To Do when got same multiplier
@@ -121,8 +126,10 @@ export class gameLogic{
             console.log(this.current_multiplier)
             this.final_amount += (this.current_multiplier * this.initial_amount)
             this.number_of_tries = 0
-            this.open_safe(true)
-            console.log(this.final_amount)
+            this.Safe_panel.changeImage('./graphics/screen_Safe_win.png')
+            this.Safe_panel.changeText('WIN')
+            this.Safe_panel.change_dimensions({x: 283 , y:100},{x:595, y:180})
+            this.open_Safe(true)
             return true;
         }
         return false

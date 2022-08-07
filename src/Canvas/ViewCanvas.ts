@@ -1,6 +1,7 @@
-import { Vector } from './../helpers/types';
-import { safe } from '../objects/safe.js';
-import { IGameObject } from './../interfaces/IGameObject';
+import { SpinningWheel } from './../objects/SpinningWheel';
+import { Vector } from '../helpers/types';
+import { Safe } from '../objects/Safe.js';
+import { IGameObject } from '../interfaces/IGameObject';
 //import { Dimbo } from './../../fonts/DimboItalic.ttf'
 //import { Titan } from './../../fonts/TitanOne-Regular.ttf';
 export class ViewCanvas{
@@ -14,7 +15,7 @@ export class ViewCanvas{
         this.canvas = document.getElementById('canvas') as HTMLCanvasElement;
         this.context = this.canvas.getContext("2d");
 
-        this.backgroundImage.src = "graphics/background_safe_minigame.png";
+        this.backgroundImage.src = "graphics/background_Safe_minigame.png";
         this.draw_bg();
     }
 
@@ -29,26 +30,36 @@ export class ViewCanvas{
     }
 
     //Draw the sprites
-    drawSprite(object:IGameObject | safe):void{
+    drawSprite(object:IGameObject | Safe | SpinningWheel):void{
         this.context.drawImage(object.image, object.position.x, object.position.y, object.size.x, object.size.y)
     }
 
-    //Draw the safes
-    draw_safes(safes : safe[]):void{
-        safes.forEach(element => {
+    //Draw the sprites
+    drawSecondarySprite(object:SpinningWheel):void{
+        this.context.drawImage(object.secondaryImage, object.position.x - 26 , object.position.y- 38, object.size.x + 48, object.size.y +50)
+    }
+
+    //Draw the Safes
+    draw_safes(Safes : Safe[]):void{
+        Safes.forEach(element => {
             this.drawSprite(element)
 
             const pos : Vector = {
                 x:element.position.x + (element.size.x / 2) - 8, 
                 y:element.position.y + (element.size.y / 2) + 20
             }
-            this.draw_text(String(element.safe_number), pos, 'white', "bold 50px comic sans ms")
+            if(element.open){
+                this.draw_text('x' + String(element.multiplier), pos, 'white', "bold", " 50px", " comic sans ms")
+            }
+            else{
+                this.draw_text(String(element.safe_number), pos, 'white', "bold", "50px", "comic sans ms")
+            }
         });
     }
 
     //Draw Text
-    draw_text(text : string, pos : Vector, color: string,fonttype:string, ):void{
-        this.context.font = fonttype;
+    draw_text(text : string, pos : Vector, color: string,fontstyle:string, fontsize : string , fontFamily: string):void{
+        this.context.font = fontstyle + ' ' + fontsize + ' ' + fontFamily ;
         this.context.fillStyle = color
         this.context.fillText(text,pos.x, pos.y)
     }

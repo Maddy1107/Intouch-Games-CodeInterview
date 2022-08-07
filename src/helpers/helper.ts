@@ -1,13 +1,13 @@
-import { safe } from '../objects/safe.js';
+import { Safe } from '../objects/Safe.js';
 //Get safe parameters
 import { safe_XPadding,safe_YPadding, safe_width, safe_height} from './setup.js';
 
 const allSafeMultiplier = [15, 16, 17, 18, 19, 20];
 let currsafeMultiplier:number[] = new Array(3);
 
-export function create_safes(): safe[]{
+export function create_safes(): Safe[]{
 
-    let safeArray :safe[] = new Array(3*3);
+    let safeArray :Safe[] = new Array(3*3);
 
     const cols = 3;
     const rows = 3;
@@ -25,7 +25,7 @@ export function create_safes(): safe[]{
 
             map.set(mul, map.get(mul) + 1)
 
-            safeArray.push(new safe(
+            safeArray.push(new Safe(
                 {
                     x: j * 170 + safe_XPadding,
                     y: i * 150 + safe_YPadding

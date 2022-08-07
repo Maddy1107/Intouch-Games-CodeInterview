@@ -1,9 +1,11 @@
-import { safeNumberPanel } from './objects/safe_number_panel.js';
-import { gameLogic } from './gameLogic.js';
+import { SpinningWheel } from './objects/SpinningWheel.js';
+import { TopTextPanel } from './objects/TopTextPanel.js';
+import { SafeNumberPanel } from './objects/SafeNumberPanel.js';
+import { GameLogic } from './GameLogic.js';
 import { IGameObject } from './interfaces/IGameObject';
-import { ViewCanvas } from './Canvas/view.js';
+import { ViewCanvas } from './Canvas/ViewCanvas.js';
 import { create_safes } from './helpers/helper.js';
-import { safe } from './objects/safe';
+import { Safe } from './objects/Safe';
 
 //Get safepanel parameters
 import { safePanelYpos, safePanelXpos, safePanelwidth, safePanelheight } from './helpers/setup.js';
@@ -17,7 +19,7 @@ function start(){
     const safes = create_safes();
 
 
-    const safePanel = new safeNumberPanel(
+    const safePanel = new SafeNumberPanel(
         {
             x:safePanelXpos,
             y:safePanelYpos
@@ -30,44 +32,38 @@ function start(){
 
     )
     
-    const game = new gameLogic(safes, view, safePanel);
+    const textPanel = new TopTextPanel;
+
+    const spinWheel = new SpinningWheel({x:603, y:330}, './graphics/SpinDial1.png','./graphics/support_safe_dial_minigame.png',{x: 250, y:250});
+
+    const game = new GameLogic(safes, safePanel, textPanel);
 
     gameOver = false;
 
-    allGameObjects.push(safePanel);
-    update(safes, game, safePanel);
+    allGameObjects.push(safePanel,spinWheel);
+    update(safes, game, safePanel, textPanel, spinWheel);
 }
 
 // Main Game Loop
-function update(safes:safe[], game: gameLogic, safepanel : safeNumberPanel): void
+function update(safes:Safe[], game: GameLogic, safepanel : SafeNumberPanel, textpanel : TopTextPanel, spinWheel : SpinningWheel): void
 {
     view.clear();
     view.draw_bg();
+    view.drawSecondarySprite(spinWheel)
     drawallobjects();
     view.draw_safes(safes);
-    view.draw_text(
-        safepanel.text,
-        { 
-            x: safePanelXpos + 30, 
-            y: safePanelYpos + 76
-        },
-        'white',
-        "bold 70px comic sans ms")
-
-
-
-
-
-
+    drawalltexts(view,safepanel, textpanel)
+    
 
     if(!gameOver){
         gameOver = game.game_over();
     }
     else{
-        gameOverScreen(game);
+        gameOver = true
+        gameOverScreen(game, textpanel);
     }
 
-    requestAnimationFrame( () => update(safes, game, safepanel) )
+    requestAnimationFrame( () => update(safes, game, safepanel, textpanel, spinWheel) )
 }
 
 //Draw all the gameobjects saved in the array
@@ -78,10 +74,28 @@ function drawallobjects()
     });
 }
 
-function gameOverScreen(game: gameLogic){
-    view.draw_text("£" + String(game.final_amount), {x:400, y : 85}, 'black', "bold 50px comic sans ms")
+//Draw all the required texts
+function drawalltexts(view1: ViewCanvas, safepanel: SafeNumberPanel, textpanel: TopTextPanel) {
+    view1.draw_text(
+        safepanel.text,
+        { 
+            x: safePanelXpos + (gameOver == true ? 80 : 30), 
+            y: safePanelYpos + 76
+        },
+        'white',
+        "bold", 
+        "70px",
+        "comic sans ms")
+
+    view1.draw_text(textpanel.text, textpanel.position,'black',"bold", textpanel.size,"comic sans ms")
 }
+
+//Show Game Over
+function gameOverScreen(game: GameLogic, textPanel:TopTextPanel){
+    textPanel.change_text("£" + String(game.final_amount))
+}
+
+
 //create a new view
 const view = new ViewCanvas()
 start()
-
