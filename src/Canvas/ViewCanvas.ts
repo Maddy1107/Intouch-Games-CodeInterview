@@ -1,13 +1,13 @@
+import { animation } from './../helpers/animations.js';
 import { SpinningWheel } from './../objects/SpinningWheel';
 import { Vector } from '../helpers/types';
 import { Safe } from '../objects/Safe.js';
 import { IGameObject } from '../interfaces/IGameObject';
-//import { Dimbo } from './../../fonts/DimboItalic.ttf'
-//import { Titan } from './../../fonts/TitanOne-Regular.ttf';
+
 export class ViewCanvas{
 
     canvas: HTMLCanvasElement;
-    private context: CanvasRenderingContext2D | null;
+    context: CanvasRenderingContext2D | null;
     private backgroundImage: HTMLImageElement = new Image();
 
     constructor()
@@ -31,12 +31,18 @@ export class ViewCanvas{
 
     //Draw the sprites
     drawSprite(object:IGameObject | Safe | SpinningWheel):void{
-        this.context.drawImage(object.image, object.position.x, object.position.y, object.size.x, object.size.y)
+        this.context.drawImage(object.image, object.position.x, object.position.y, object.size.x, object.size.y);
     }
 
     //Draw the sprites
-    drawSecondarySprite(object:SpinningWheel):void{
-        this.context.drawImage(object.secondaryImage, object.position.x - 26 , object.position.y- 38, object.size.x + 48, object.size.y +50)
+    drawSecondarySprite(object:SpinningWheel | Safe, isAnimated : boolean):void{
+        if(!isAnimated){
+            this.context.drawImage(object.secondaryImage, object.position.x - 26 , object.position.y- 38, object.size.x + 48, object.size.y +50)
+        }
+        else{
+            const secondarySprite = new animation(object.secondaryImage.src,2,1,object.position.x,object.position.y,300, 164,50,this)
+            secondarySprite.animateSprite(false)
+        }
     }
 
     //Draw the Safes
@@ -49,7 +55,8 @@ export class ViewCanvas{
                 y:element.position.y + (element.size.y / 2) + 20
             }
             if(element.open){
-                this.draw_text('x' + String(element.multiplier), pos, 'white', "bold", " 50px", " comic sans ms")
+                this.drawSecondarySprite(element, true);
+                this.draw_text('x' + String(element.multiplier), pos, 'white ', "bold", " 50px", " comic sans ms")
             }
             else{
                 this.draw_text(String(element.safe_number), pos, 'white', "bold", "50px", "comic sans ms")
@@ -63,5 +70,12 @@ export class ViewCanvas{
         this.context.fillStyle = color
         this.context.fillText(text,pos.x, pos.y)
     }
+
+    // spin(){
+    //     this.context.translate(this.canvas.width / 2, this.canvas.height / 2)
+    //     this.context.rotate(Math.PI/180)
+    //     this.context.translate(-this.canvas.width / 2, -this.canvas.height / 2)
+
+    // }
 
 }

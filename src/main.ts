@@ -9,13 +9,19 @@ import { Safe } from './objects/Safe';
 
 //Get safepanel parameters
 import { safePanelYpos, safePanelXpos, safePanelwidth, safePanelheight } from './helpers/setup.js';
+import { animation } from './helpers/animations.js';
 
 //An array containing all the gameobjects
 let allGameObjects : IGameObject[] = new Array();
+let allanimatedObjects : animation[] = new Array();
 let gameOver = true;
 
 //Initialize the game and its elements
 function start(){
+
+    const animatedLED1 = new animation('../graphics/leds_safe_dial_minigame.png',3,1,610, 280,354, 44 ,50,view)
+    const animatedLED2 = new animation('../graphics/leds_safe_dial_minigame.png',3,1,745, 280,354, 44 ,50,view)
+
     const safes = create_safes();
 
 
@@ -34,26 +40,26 @@ function start(){
     
     const textPanel = new TopTextPanel;
 
-    const spinWheel = new SpinningWheel({x:603, y:330}, './graphics/SpinDial1.png','./graphics/support_safe_dial_minigame.png',{x: 250, y:250});
+    const spinWheel = new SpinningWheel({x:623, y:330}, './graphics/SpinDial1.png','./graphics/support_safe_dial_minigame.png',{x: 230, y:250});
 
     const game = new GameLogic(safes, safePanel, textPanel);
 
     gameOver = false;
 
     allGameObjects.push(safePanel,spinWheel);
+    allanimatedObjects.push(animatedLED1,animatedLED2);
     update(safes, game, safePanel, textPanel, spinWheel);
 }
 
 // Main Game Loop
-function update(safes:Safe[], game: GameLogic, safepanel : SafeNumberPanel, textpanel : TopTextPanel, spinWheel : SpinningWheel): void
+function update(safes:Safe[], game: GameLogic, safepanel : SafeNumberPanel, textpanel : TopTextPanel, spinWheel : SpinningWheel)
 {
     view.clear();
     view.draw_bg();
-    view.drawSecondarySprite(spinWheel)
+    view.drawSecondarySprite(spinWheel,false)
     drawallobjects();
     view.draw_safes(safes);
-    drawalltexts(view,safepanel, textpanel)
-    
+    drawalltexts(view,safepanel,textpanel)
 
     if(!gameOver){
         gameOver = game.game_over();
@@ -71,6 +77,10 @@ function drawallobjects()
 {
     allGameObjects.forEach(element => {
         view.drawSprite(element);
+    });
+
+    allanimatedObjects.forEach(element => {
+        element.animateSprite(true);
     });
 }
 
@@ -92,7 +102,8 @@ function drawalltexts(view1: ViewCanvas, safepanel: SafeNumberPanel, textpanel: 
 
 //Show Game Over
 function gameOverScreen(game: GameLogic, textPanel:TopTextPanel){
-    textPanel.change_text("£" + String(game.final_amount))
+    textPanel.change_dimensions({x:80, y : 100}, '80px')
+    textPanel.change_text("YOU WIN £" + String(game.final_amount) + '!')
 }
 
 

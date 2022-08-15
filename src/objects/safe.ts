@@ -4,15 +4,19 @@ import { Vector } from "../helpers/types.js";
 export class Safe implements IGameObject{
 
     image : HTMLImageElement = new Image();
+    secondaryImage : HTMLImageElement = new Image()
     position: Vector;
     size:Vector;
     open : boolean
+    items : string[] = new Array()
+    isWinningSafe : boolean
 
     constructor(
         position : Vector,
         image : string,
         private safe_multiplier : number,
         private safeNumber : number,
+        private safePrzeImage : string,
         size : Vector,
     ){
         this.position = position;
@@ -21,6 +25,8 @@ export class Safe implements IGameObject{
         this.safeNumber = safeNumber;
         this.size = size;
         this.open = false;
+        this.secondaryImage.src = safePrzeImage;
+        this.isWinningSafe = false
     }
 
     //Getters
@@ -30,6 +36,10 @@ export class Safe implements IGameObject{
 
     get safe_number():number{
         return this.safeNumber
+    }
+
+    get safe_prze_image():string{
+        return this.safePrzeImage
     }
 
     //Changes the safe Image according to its state (Open Close)

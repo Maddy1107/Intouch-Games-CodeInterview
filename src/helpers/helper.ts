@@ -3,7 +3,16 @@ import { Safe } from '../objects/Safe.js';
 import { safe_XPadding,safe_YPadding, safe_width, safe_height} from './setup.js';
 
 const allSafeMultiplier = [15, 16, 17, 18, 19, 20];
+const openImages = [
+    "../graphics/coins.png",
+    "../graphics/diamond.png",
+    "../graphics/gold.png",
+    "../graphics/notes.png",
+    "../graphics/ring.png",
+];
+
 let currsafeMultiplier:number[] = new Array(3);
+let currSafeImage:string[] = new Array(3);
 
 export function create_safes(): Safe[]{
 
@@ -33,6 +42,7 @@ export function create_safes(): Safe[]{
                 "../graphics/safe_minigame.png",
                 mul,
                 ++count,
+                currSafeImage[currsafeMultiplier.indexOf(mul)],
                 {
                     x: safe_width,
                     y: safe_height
@@ -63,12 +73,20 @@ function get_random_multiplier(map:Map<number, number>) : number{
 //Select 3 different unique multipliers form all the multiplier list
 function select_3_multipliers():void{
     let rand_mul = 0
+    let rand_imageSRC = ""
+
     currsafeMultiplier = []
+    currSafeImage = []
 
     while(currsafeMultiplier.length != 3){
+
         rand_mul = allSafeMultiplier[Math.floor(Math.random() * allSafeMultiplier.length)]
-        
+        rand_imageSRC = openImages[Math.floor(Math.random() * openImages.length)]
+
         currsafeMultiplier.push(rand_mul);
+        currSafeImage.push(rand_imageSRC);
+
         allSafeMultiplier.splice(allSafeMultiplier.indexOf(rand_mul),1)
+        openImages.splice(openImages.indexOf(rand_imageSRC),1)
     }
 }

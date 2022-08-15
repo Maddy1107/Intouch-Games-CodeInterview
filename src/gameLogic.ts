@@ -75,22 +75,20 @@ export class GameLogic{
 
     //Open the Safe
     open_Safe(gameComplete : boolean) {
+        
         this.total_Safes.forEach(element => {
-            if(element.Safe_number == this.current_Safe){
+            if(element.safe_number == this.current_Safe && !gameComplete){
                 element.changeImage('./graphics/Safe_open_minigame.png')
                 this.draw_panel_text()
                 element.open = true;
                 this.got_same_multiplier =  this.check_if_same_multiplier(element.multiplier);
+                element.isWinningSafe = true;
+            }
+            else if(gameComplete){
+                element.open = true;
+                element.changeImage('./graphics/Safe_open_minigame.png')
             }
         });
-        // for(let i = 0; i < this.total_Safes.length; i++) {
-        //     if(this.total_Safes[i].Safe_number == this.current_Safe){
-        //         this.total_Safes[i].changeImage('./graphics/Safe_open_minigame.png')
-        //         this.got_same_multiplier =  this.check_if_same_multiplier(this.total_Safes[i].mu);
-        //         console.log(this.current_Safe, this.multipliers_already_appeared, this.got_same_multiplier)
-        //         break;
-        //     }
-        // }
     }
     
     //Check if the multiplier already exists
@@ -104,7 +102,6 @@ export class GameLogic{
         else{
             this.multipliers_already_appeared.set(multiplier, 1)
         }
-        console.log(this.current_Safe, this.multipliers_already_appeared)
         if( this.multipliers_already_appeared.get(multiplier) >= 2)
         {
             this.current_multiplier = multiplier;

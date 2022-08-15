@@ -13,6 +13,7 @@ export class SpinningWheel implements IGameObject{
         wheelImage : string,
         secondaryImage: string,
         size : Vector,
+        
     ){
         this.position = position;
         this.image.src = wheelImage;
@@ -20,12 +21,10 @@ export class SpinningWheel implements IGameObject{
         this.size = size;
     }
 
-    //Changes the safe Image according to its state (Open Close)
     changeBGImage(src:string){
         this.secondaryImage.src = src
     }
 
-    //Changes the safe Image according to its state (Open Close)
     changeWheelImage(src:string){
         this.image.src = src
     }
