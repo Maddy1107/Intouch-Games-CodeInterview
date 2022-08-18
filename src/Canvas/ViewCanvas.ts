@@ -46,7 +46,7 @@ export class ViewCanvas{
     }
 
     //Draw the Safes
-    draw_safes(Safes : Safe[]):void{
+    draw_safes(Safes : Safe[], isgameOver : boolean):void{
         Safes.forEach(element => {
             this.drawSprite(element)
 
@@ -54,12 +54,24 @@ export class ViewCanvas{
                 x:element.position.x + (element.size.x / 2) - 8, 
                 y:element.position.y + (element.size.y / 2) + 20
             }
-            if(element.open){
-                this.drawSecondarySprite(element, true);
-                this.draw_text('x' + String(element.multiplier), pos, 'white ', "bold", " 50px", " comic sans ms")
+            if(!isgameOver){
+                if(element.open){
+                    this.drawSecondarySprite(element, true);
+                    this.draw_text('x' + String(element.multiplier), pos, 'white ', "bold", " 50px", " comic sans ms")
+                }
+                else{
+                    this.draw_text(String(element.safe_number), pos, 'white', "bold", "50px", "comic sans ms")
+                }
             }
             else{
-                this.draw_text(String(element.safe_number), pos, 'white', "bold", "50px", "comic sans ms")
+                if(element.isWinningSafe)
+                {
+                    this.drawSecondarySprite(element, true);
+                }
+                else
+                {
+                    this.draw_text('x' + String(element.multiplier), pos, 'white ', "bold", " 50px", " comic sans ms")
+                }
             }
         });
     }
@@ -70,12 +82,4 @@ export class ViewCanvas{
         this.context.fillStyle = color
         this.context.fillText(text,pos.x, pos.y)
     }
-
-    // spin(){
-    //     this.context.translate(this.canvas.width / 2, this.canvas.height / 2)
-    //     this.context.rotate(Math.PI/180)
-    //     this.context.translate(-this.canvas.width / 2, -this.canvas.height / 2)
-
-    // }
-
 }

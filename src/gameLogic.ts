@@ -1,3 +1,4 @@
+import { SpinningWheel } from './objects/SpinningWheel';
 import { TopTextPanel } from './objects/ToptextPanel';
 import { SafeNumberPanel } from './objects/SafeNumberPanel';
 import { Safe } from "./objects/Safe";
@@ -20,47 +21,93 @@ export class GameLogic{
 
     textPanel: TopTextPanel
 
-    constructor(Safes : Safe[], Safepanel:SafeNumberPanel, textPanel: TopTextPanel){
-        document.addEventListener('keydown', this.processInput)
+    wheel : SpinningWheel
+
+    safe_digit_order = [2,1,9,8,7,6,5,4,3]
+
+    constructor(Safes : Safe[], Safepanel:SafeNumberPanel, textPanel: TopTextPanel, wheel:SpinningWheel){
+
+        document.addEventListener('mousedown',this.getCursorPosition)
+
         this.number_of_tries = 4;
         this.total_Safes = Safes;
         this.final_amount = 0;
         this.got_same_multiplier = false;
         this.Safe_panel = Safepanel
         this.textPanel = textPanel
+        this.wheel = wheel;
     }
 
-    //Take a keyboard event and process it
-    processInput = (e : KeyboardEvent) : void =>{
-        if(e.code === 'Space'){
-            if(this.number_of_tries > 0){
-                this.perform_logic()
-                this.number_of_tries--;
-            }
+    //Get Cursor Position
+    getCursorPosition = (e) : void => {
+        const x = e.clientX
+        const y = e.clientY
+        //Check for button
+        if(x <= 800 && x >= 700 && y>= 400 && y <= 500)
+        {
+            this.processInput()
         }
+    }
 
+    //Process the mouse press
+    processInput(){
+        if(this.number_of_tries > 0){
+            this.perform_logic()
+            this.number_of_tries--;
+        }
     }
 
     //Main Game logic
+    //some places numbers are divided by 40 because there are 9 numbers and total
+    //angle is 360, so 360/9 = 40
     perform_logic():void{
         let rand_num = 0
+        let closest = 0
 
         rand_num = this.choose_random_number()
 
         while(true){
-            if(this.numbers_already_appeared.includes(rand_num))
+            closest = this.findClosestDivisible(rand_num, 40)
+            if(this.numbers_already_appeared.includes(closest))
             {
                 rand_num = this.choose_random_number()
             }
             else
             {
-                this.numbers_already_appeared.push(rand_num)
+                this.numbers_already_appeared.push(closest)
                 break;
             }
         }
-        this.current_Safe = rand_num;
+        
+        this.wheel.numberOfSpin = closest
 
-        if(this.current_Safe > 0){
+        this.current_Safe = this.safe_digit_order[this.wheel.numberOfSpin/40]
+
+        console.log(this.wheel.numberOfSpin/40,this.wheel.numberOfSpin,this.current_Safe)
+
+        console.log(this.safe_digit_order)
+        console.log(this.current_Safe)
+
+        let count = this.safe_digit_order.indexOf(this.current_Safe)
+
+        for (let i = 0; i < count; i++) {
+            this.safe_digit_order.push(this.safe_digit_order[i]);
+        }
+
+        this.safe_digit_order.splice(0,count)
+
+        console.log(this.safe_digit_order)
+
+        this.wheel.startSpin = true
+
+        
+
+    }
+
+    //Open safe only when spin is done
+    checkifTimetoOpensafe()
+    {
+        if(this.current_Safe > 0 && !this.wheel.startSpin){
             this.open_Safe(false);
             this.textPanel.change_text('Safe ' + this.current_Safe)
             this.textPanel.change_dimensions({x:280, y : 100}, '100px')
@@ -68,9 +115,23 @@ export class GameLogic{
         }
     }
 
-    //Choose a random number from 1 - 9
+    //As the number can be anything and fall between 2 numbers...
+    //Because of that reason, the closest divisible to 40 is found so that the arrow can fall on an exact number
+    findClosestDivisible(n:number, m:number) : number
+    {
+        let q = Math.floor(n / m)
+        let n1 = m * q
+        let n2 = (n * m) > 0 ? (m * ( q + 1)) : (m * (q - 1));
+        if(Math.abs(n - n1) < Math.abs(n-n2)){
+            return n1;
+        }
+        return n2
+    }
+
+    //Choose a random number 0-720 for more spin
     choose_random_number() : number{
-        return Math.floor(Math.random() * 9) + 1;
+        //this.wheel.startSpin = true
+        return Math.floor(Math.random() * 360)
     }
 
     //Open the Safe
@@ -120,7 +181,6 @@ export class GameLogic{
     game_over():boolean{
         if(this.got_same_multiplier)
         {
-            console.log(this.current_multiplier)
             this.final_amount += (this.current_multiplier * this.initial_amount)
             this.number_of_tries = 0
             this.Safe_panel.changeImage('./graphics/screen_Safe_win.png')

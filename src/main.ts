@@ -40,13 +40,14 @@ function start(){
     
     const textPanel = new TopTextPanel;
 
-    const spinWheel = new SpinningWheel({x:623, y:330}, './graphics/SpinDial1.png','./graphics/support_safe_dial_minigame.png',{x: 230, y:250});
+    const spinWheel = new SpinningWheel({x:623, y:330}, './graphics/SpinDial1.png','./graphics/support_safe_dial_minigame.png',
+    "./graphics/SpinA.png",{x: 230, y:245});
 
-    const game = new GameLogic(safes, safePanel, textPanel);
+    const game = new GameLogic(safes, safePanel, textPanel,spinWheel);
 
     gameOver = false;
 
-    allGameObjects.push(safePanel,spinWheel);
+    allGameObjects.push(safePanel);
     allanimatedObjects.push(animatedLED1,animatedLED2);
     update(safes, game, safePanel, textPanel, spinWheel);
 }
@@ -57,9 +58,12 @@ function update(safes:Safe[], game: GameLogic, safepanel : SafeNumberPanel, text
     view.clear();
     view.draw_bg();
     view.drawSecondarySprite(spinWheel,false)
+    spinWheel.draw(view);
+    spinWheel.drawButton(view)
     drawallobjects();
-    view.draw_safes(safes);
+    view.draw_safes(safes,gameOver);
     drawalltexts(view,safepanel,textpanel)
+    game.checkifTimetoOpensafe()
 
     if(!gameOver){
         gameOver = game.game_over();
