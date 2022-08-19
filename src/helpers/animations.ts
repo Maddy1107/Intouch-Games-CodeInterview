@@ -39,6 +39,8 @@ export class animation{
         this.Ypos = y
     }
 
+    //Animate sprite when true is passed
+    //else only show the image
     animateSprite(startAnim:boolean){
         this.view.context.drawImage(
             this.spritesheet,this.frameX * this.spriteWidth,this.frameY * this.spriteHeight,

@@ -16,14 +16,14 @@ export class GameLogic{
 
     number_of_tries : number;//how many tries
     total_Safes = []//store all Safes
-    Safe_panel : SafeNumberPanel
-    got_same_multiplier : boolean;
+    Safe_panel : SafeNumberPanel//The panel showing the safes opened
+    got_same_multiplier : boolean;//check if we got the same multiplier as before
 
-    textPanel: TopTextPanel
+    textPanel: TopTextPanel//Top panel where details are shown
 
-    wheel : SpinningWheel
+    wheel : SpinningWheel//the spinning wheel
 
-    safe_digit_order = [2,1,9,8,7,6,5,4,3]
+    safe_digit_order = [2,1,9,8,7,6,5,4,3]// The order of numbers on the wheel
 
     constructor(Safes : Safe[], Safepanel:SafeNumberPanel, textPanel: TopTextPanel, wheel:SpinningWheel){
 
@@ -68,7 +68,7 @@ export class GameLogic{
 
         while(true){
             closest = this.findClosestDivisible(rand_num, 40)
-            if(this.numbers_already_appeared.includes(closest))
+            if(this.numbers_already_appeared.includes(closest) || closest === 0)
             {
                 rand_num = this.choose_random_number()
             }
@@ -77,17 +77,12 @@ export class GameLogic{
                 this.numbers_already_appeared.push(closest)
                 break;
             }
-        }
-        
-        this.wheel.numberOfSpin = closest
+        }        
+        this.wheel.numberOfSpin = closest//the wheel is going to spin this amount of angles
 
-        this.current_Safe = this.safe_digit_order[this.wheel.numberOfSpin/40]
+        this.current_Safe = this.safe_digit_order[this.wheel.numberOfSpin/40]//getting the cuurent safe that has to be opened
 
-        console.log(this.wheel.numberOfSpin/40,this.wheel.numberOfSpin,this.current_Safe)
-
-        console.log(this.safe_digit_order)
-        console.log(this.current_Safe)
-
+        //setting the current safe as 0 to start the spin from that number
         let count = this.safe_digit_order.indexOf(this.current_Safe)
 
         for (let i = 0; i < count; i++) {
@@ -95,13 +90,10 @@ export class GameLogic{
         }
 
         this.safe_digit_order.splice(0,count)
+        //
 
-        console.log(this.safe_digit_order)
-
+        //Start the wheel spin
         this.wheel.startSpin = true
-
-        
-
     }
 
     //Open safe only when spin is done
@@ -131,7 +123,7 @@ export class GameLogic{
     //Choose a random number 0-720 for more spin
     choose_random_number() : number{
         //this.wheel.startSpin = true
-        return Math.floor(Math.random() * 360)
+        return Math.floor(Math.random() * 359)
     }
 
     //Open the Safe
@@ -171,6 +163,7 @@ export class GameLogic{
         return false
     }
 
+    //Draw the opened safe number in the panel
     draw_panel_text():void
     {
         this.Safe_panel.text += String(this.current_Safe) + ' '

@@ -33,19 +33,23 @@ export class SpinningWheel implements IGameObject{
         this.angleOfSpin = 0;
     }
 
+    //change the bg image
     changeBGImage(src:string){
         this.secondaryImage.src = src
     }
 
+    //change the wheel image
     changeWheelImage(src:string){
         this.image.src = src
     }
 
+    //draw the spin button on the wheel
     drawButton(view: ViewCanvas)
     {
         view.context.drawImage(this.spinButton,this.position.x + this.size.x/2 - 35, this.position.y + this.size.y/2 - 35)
     }
 
+    //check if the wheel hast to be spinned
     update()
     {
         if(this.startSpin)
@@ -65,6 +69,7 @@ export class SpinningWheel implements IGameObject{
         }
     }
 
+    //draw the wheel and spin when needed
     draw(view: ViewCanvas)
     {
         if(this.startSpin || this.angleOfSpin > 0){

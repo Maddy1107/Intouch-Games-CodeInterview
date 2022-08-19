@@ -26,11 +26,13 @@ export class SafeNumberPanel implements IGameObject{
         this.image.src = src
     }
 
+    //Change the text when new safe opened
     changeText(newtext : string)
     {
         this.text = newtext
     }
 
+    //Change the dimention to smmothly transition between 2 different images for win and close
     change_dimensions(size : Vector, pos: Vector){
         this.size = size;
         this.position = pos

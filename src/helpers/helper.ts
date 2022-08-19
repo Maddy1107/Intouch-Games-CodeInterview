@@ -9,11 +9,12 @@ const openImages = [
     "../graphics/gold.png",
     "../graphics/notes.png",
     "../graphics/ring.png",
-];
+];//all images to show after safe opened
 
-let currsafeMultiplier:number[] = new Array(3);
-let currSafeImage:string[] = new Array(3);
+let currsafeMultiplier:number[] = new Array(3);//array for the 3 distinct multiplier
+let currSafeImage:string[] = new Array(3);//array for 3 distinct images
 
+//Create safes and store in an array to draw later
 export function create_safes(): Safe[]{
 
     let safeArray :Safe[] = new Array(3*3);
@@ -70,7 +71,7 @@ function get_random_multiplier(map:Map<number, number>) : number{
    }
 }
 
-//Select 3 different unique multipliers form all the multiplier list
+//Select 3 different unique multipliers and images form all the multiplier and imageslist
 function select_3_multipliers():void{
     let rand_mul = 0
     let rand_imageSRC = ""
